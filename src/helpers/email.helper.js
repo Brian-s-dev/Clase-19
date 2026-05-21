@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import ENVIRONMENT from '../config/environment.config.js';
+import jwt from 'jsonwebtoken';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -11,7 +12,14 @@ const transporter = nodemailer.createTransport({
 
 export const sendVerificationEmail = async (email) => {
     try {
-        const url_verificacion = `http://localhost:${ENVIRONMENT.PORT}/api/auth/verify-email?email=${email}`;
+        const verification_token = jwt.sign(
+            {
+                email: email
+            },
+            ENVIRONMENT.JWT_SECRET
+        )
+
+        const url_verificacion = `http://localhost:${ENVIRONMENT.PORT}/api/auth/verify-email?verification_token=${verification_token}`;
 
         await transporter.sendMail({
             from: `"Mi App Backend" <${ENVIRONMENT.GMAIL_USERNAME}>`,
