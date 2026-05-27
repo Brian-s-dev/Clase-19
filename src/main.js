@@ -7,12 +7,15 @@ import authRouter from "./routes/auth.route.js";
 import workspaceRouter from "./routes/workspace.route.js";
 import authMiddleware from './middleware/auth.middleware.js';
 import ServerError from './helpers/serverError.helper.js';
+import cors from 'cors';
 
 if (ENVIRONMENT.MODE === 'development') {
     dns.setServers(['8.8.8.8', '8.8.4.4']);
 }
 
 const app = express();
+
+app.use(cors()) // Habilitar CORS para todas las rutas y métodos HTTP
 
 app.use(express.json());
 
@@ -112,3 +115,13 @@ connectMongoDB()
 
 app.use('/api/auth', authRouter);
 app.use('/api/workspace', workspaceRouter);
+
+/* 
+
+/api/auth => trabaja todo lo relacionado a autentificacion
+/api/workspace => trabaja todo lo relacionado a los espacios de trabajo
+    /:workspace_id/members => trabaja todo lo relacionado a los miembros de un espacio de trabajo
+    /:workspace_id/channels => trabaja todo lo relacionado a los canales de un espacio de trabajo
+        /:channel_id/messages => trabaja todo lo relacionado a los mensajes de un canal de un espacio de trabajo
+    /:workspace_id/contacts => trabaja todo lo relacionado a los contactos de un espacio de trabajo
+*/
