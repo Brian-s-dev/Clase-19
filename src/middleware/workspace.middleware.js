@@ -2,16 +2,16 @@ import workspaceRepository from "../repositories/workspace.repository.js";
 import workspaceMemberRepository from "../repositories/workspaceMember.repository.js";
 import ServerError from "../helpers/serverError.helper.js";
 
-function workspaceMiddleware( valid_roles = [] ) {
+function workspaceMiddleware(valid_roles = []) {
 
-    return async function(request, response, next) {
+    return async function (request, response, next) {
         try {
             const { workspace_id } = request.params;
             const user_id = request.user.id;
 
             const workspace = await workspaceRepository.getById(workspace_id);
-            
-            if (!workspace || !workspace.activo) {
+
+            if (!workspace || !workspace.estado) {
                 throw new ServerError("Espacio de trabajo no encontrado", 404);
             }
 
@@ -38,7 +38,7 @@ function workspaceMiddleware( valid_roles = [] ) {
                     status: error.status
                 });
             }
-            if(error.name === 'CastError' && error.kind === 'ObjectId') {
+            if (error.name === 'CastError' && error.kind === 'ObjectId') {
                 return response.status(400).json({
                     message: "ID de espacio de trabajo inválido",
                     ok: false,

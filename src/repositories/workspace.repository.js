@@ -19,10 +19,10 @@ class WorkspaceRepository {
         await this.updateById(workspace_id, { estado: false });
     }
     async deleteById(workspace_id) {
-    return await Workspace.findByIdAndDelete(workspace_id);
+        return await Workspace.findByIdAndDelete(workspace_id);
     }
     async updateById(workspace_id, update_data) {
-        return await Workspace.findByIdAndUpdate(workspace_id, update_data);
+        return await Workspace.findByIdAndUpdate(workspace_id, update_data, { new: true });
     }
     async create(nombre, descripcion) {
         return await Workspace.create({
